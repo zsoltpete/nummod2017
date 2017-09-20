@@ -3,11 +3,7 @@
 #include <vector>
 #include <stdlib.h> 
 
-int main(){
 
-
-
-}
 
 void rowNormal(){
     int n,m;
@@ -34,7 +30,7 @@ void rowNormal(){
     std::vector<double> vector;
     double sum = 0;
     for (int j = 0;j < m;j++){
-      sum += abs(matrix[i][j]);
+      sum += fabs(matrix[i][j]);
     }
     if (i == 0){
       max = sum;
@@ -74,7 +70,7 @@ void colNormal(){
     std::vector<double> vector;
     double sum = 0;
     for (int j = 0;j < n;j++){
-      sum += abs(matrix[j][i]);
+      sum += fabs(matrix[j][i]);
     }
     if (i == 0){
       max = sum;
@@ -178,4 +174,11 @@ void matrixVector(){
     }
     std::cout << y[1];
   
+}
+
+int main(){
+
+  rowNormal();
+  return 0;
+
 }
