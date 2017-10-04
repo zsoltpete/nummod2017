@@ -9,6 +9,7 @@ Vector randomizeVector(int n){
   for (int i = 0; i < n;i++){
     number = rand() % 9999 + 1;
     number /= 10000;
+    number = 2.0*number-1.0;
     vector.push_back(number);
   }
   return vector;
@@ -43,7 +44,7 @@ int main(){
   matrix = readMatrix(n,m);
   srand(time(NULL));
   int max = 0;
-  for(int i = 0; i< 100000; i++){
+  for(int i = 0; i< 1; i++){
     Vector vector;
     vector = randomizeVector(n);
     vectorContainer.push_back(vector);
