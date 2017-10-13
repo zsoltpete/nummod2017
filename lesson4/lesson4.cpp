@@ -65,10 +65,6 @@ int main(){
   matrix = readMatrix(n, n);
   Matrix copyMatrix;
   copyMatrix = matrix;
-  Matrix egysegMatrix;
-  egysegMatrix = readMatrix(n, n);
-  Matrix result;
-  result = readMatrix(n, n);
   for (int k = 0; k < n;k++){
     double divide = matrix[k][k];
     for(int i = k; i < n;i++){
