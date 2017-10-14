@@ -12,7 +12,11 @@ typedef std::vector<double> Vector;
 
 inline void print(Vector vector){
   for (int i = 0; i < vector.size(); i++){
-    std::cout << std::fixed << std::setprecision(8) << vector[i] << " ";
+    if(i == vector.size() - 1){
+      std::cout << std::fixed << std::setprecision(8) << vector[i];
+    }else{
+      std::cout << std::fixed << std::setprecision(8) << vector[i] << " ";
+    }
   }
 }
 
