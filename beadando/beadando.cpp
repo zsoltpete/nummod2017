@@ -42,23 +42,21 @@ bool isSingular ( Matrix matrix ) {
 
 std::vector<Matrix> pivotize ( Matrix matrix, Vector p ) {
     Matrix pivoteMatrix = matrix;
-    for ( int j = 0; j < pivoteMatrix.size(); j++ ) {
+    for ( int j = 0; j < matrix.size(); j++ ) {
         int row = j;
         double val = 0.0;
-        for ( int i = j; i < pivoteMatrix.size(); i++ ) {
-            double cand = fabs ( pivoteMatrix[i][j] );
-//             std::cout << "fabs: " << cand <<std::endl;
+        for ( int i = j; i < matrix.size(); i++ ) {
+            double cand = fabs ( matrix[i][j] );
             if ( val < cand ) {
                 val = cand;
                 row = i;
             }
         }
         if ( j != row ) {
-//             std::cout<< j <<row << std::endl;
             double tmp = p[row];
             p[row] = p[j];
             p[j] = tmp;
-            for ( int i = 0; i < pivoteMatrix.size(); i++ ) {
+            for ( int i = 0; i < matrix.size(); i++ ) {
                 double tmp = pivoteMatrix[j][i];
                 pivoteMatrix[j][i] = pivoteMatrix[row][i];
                 pivoteMatrix[row][i] = tmp;
@@ -98,19 +96,11 @@ void pivotize ( int actualCol ) {
 void LU() {
     int n = matrix.size();
     for ( int k = 0; k < n; k++ ) {
-        std::cout << std::endl;
-//         print ( matrix );
         pivotize ( k );
-//         print ( matrix );
-//         std::cout << std::endl;
         for ( int i = k + 1; i < n; i++ ) {
-//             std::cout << matrix[i][k] << " = " << matrix[i][k] << " / " << matrix[k][k] << "// ";
             matrix[i][k] = matrix[i][k] / matrix[k][k];
-//             std::cout << matrix[i][k] << std::endl;
             for ( int j = k + 1; j < n; j++ ) {
-//                 std::cout << matrix[i][j] << " = " << matrix[i][j] << " - " << matrix[i][k] << " * " << matrix[k][j] << "// ";
                 matrix[i][j] = matrix[i][j] - matrix[i][k] * matrix[k][j];
-//                 std::cout << matrix[i][j] << std::endl;
             }
         }
     }
@@ -131,9 +121,12 @@ Vector calculateY ( Matrix A, Vector BP ) {
     for ( int i = 0; i < n; i++ ) {
         double sum = 0.0;
         for ( int j = 0; j < i; j++ ) {
+	  std::cout << sum <<  A[i][j] << " " <<  y[j] <<std::endl;
             sum += A[i][j] * y[j];
+	    std::cout << sum <<  "EZ sum"<<std::endl;
         }
         y[i] = BP[i] - sum;
+	
     }
     return y;
 }
@@ -164,9 +157,7 @@ int main() {
     int n,m;
     std::cin >> n;
     while ( n != 0 ) {
-        
         matrix = readMatrix ( n,n );
-
         P = initPVector ( n );
 	std::vector<Matrix> container = pivotize ( matrix, P );
         Matrix checkSingularyA = container[0];
@@ -176,33 +167,35 @@ int main() {
             for ( int vectorCounter = 0; vectorCounter < m; vectorCounter++ ) {
                 Vector vector;
                 vector = readVector ( n );
-
             }
         } else {
             LU();
             std::cin >> m;
+	    std::cout << "LU:"<< std::endl; 
+	    
+	     std::cout <<  std::endl;
             for ( int vectorCounter = 0; vectorCounter < m; vectorCounter++ ) {
                 Vector B;
                 B = readVector ( n );
                 Vector BP = calculateBP ( B, P );
-		std::cout <<  std::endl;
-                Matrix UniqeL = makeUniqL ( matrix );
-                Vector Y = calculateY ( UniqeL, BP );
-		std::cout <<  std::endl;
+		std::cout << "BP:"<< std::endl; 
+	    print(BP);
+	     std::cout <<  std::endl;
+                //Matrix UniqeL = makeUniqL ( matrix );
+	     print(matrix);
+                Vector Y = calculateY ( matrix, BP );
+		std::cout << "Y:"<< std::endl; 
+	    print(Y);
+	     std::cout <<  std::endl;
 		Vector X = calculateX ( matrix, Y );
                  print ( X );
-                std::cout <<  std::endl;
-		std::cout <<  std::endl;
+		 std::cout <<  std::endl;
             }
 
         }
 
         std::cin >> n;
     }
-
-//     std::cout << std::endl;
-//     Matrix lu = LU ( A );
-//     print ( lu );
     return 0;
 }
 
