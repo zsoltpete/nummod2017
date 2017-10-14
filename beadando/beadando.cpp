@@ -120,7 +120,7 @@ void LU() {
 Vector calculateBP ( Vector B, Vector P ) {
     Vector BP;
     for ( int i = 0; i < P.size(); i++ ) {
-        BP.push_back ( B[P[i]] );
+        BP.push_back ( B[P[i] - 1] );
     }
     return BP;
 }
@@ -146,6 +146,7 @@ Vector calculateX ( Matrix A, Vector y ) {
         for ( int j = i+1; j < n; j++ ) {
             sum += A[i][j] * x[j];
         }
+        
         x[i] = ( y[i] - sum ) / A[i][i];
     }
     return y;
@@ -180,21 +181,27 @@ int main() {
             }
         } else {
             LU();
-	    std::cout << "LU:" << std::endl;
-	    print(matrix);
-// 	    std::cout << "P:" << std::endl;
-// 	    print(P);
-	    std::cout <<  std::endl;
             std::cin >> m;
             for ( int vectorCounter = 0; vectorCounter < m; vectorCounter++ ) {
                 Vector B;
                 B = readVector ( n );
+// 		print(B);
                 Vector BP = calculateBP ( B, P );
+//  		print(matrix);
+		std::cout <<  std::endl;
                 Matrix UniqeL = makeUniqL ( matrix );
+		//print(UniqeL);
                 Vector Y = calculateY ( UniqeL, BP );
-                Vector X = calculateX ( matrix, Y );
-                //print ( X );
+// // 		print(UniqeL);
+//                 print(BP);
+		std::cout <<  std::endl;
+// 		print(Y);
+		print(matrix);
+		print(Y);
+		Vector X = calculateX ( matrix, Y );
+//                 print ( X );
                 std::cout <<  std::endl;
+		std::cout <<  std::endl;
             }
 
         }
