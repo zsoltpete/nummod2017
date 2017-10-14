@@ -146,10 +146,9 @@ Vector calculateX ( Matrix A, Vector y ) {
         for ( int j = i+1; j < n; j++ ) {
             sum += A[i][j] * x[j];
         }
-        
         x[i] = ( y[i] - sum ) / A[i][i];
     }
-    return y;
+    return x;
 }
 
 Matrix makeUniqL ( Matrix matrix ) {
@@ -185,21 +184,13 @@ int main() {
             for ( int vectorCounter = 0; vectorCounter < m; vectorCounter++ ) {
                 Vector B;
                 B = readVector ( n );
-// 		print(B);
                 Vector BP = calculateBP ( B, P );
-//  		print(matrix);
 		std::cout <<  std::endl;
                 Matrix UniqeL = makeUniqL ( matrix );
-		//print(UniqeL);
                 Vector Y = calculateY ( UniqeL, BP );
-// // 		print(UniqeL);
-//                 print(BP);
 		std::cout <<  std::endl;
-// 		print(Y);
-		print(matrix);
-		print(Y);
 		Vector X = calculateX ( matrix, Y );
-//                 print ( X );
+                 print ( X );
                 std::cout <<  std::endl;
 		std::cout <<  std::endl;
             }
