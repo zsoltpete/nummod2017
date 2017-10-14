@@ -1,5 +1,8 @@
 #include "mathhelpers.h"
 
+Matrix matrix;
+Vector P;
+
 Matrix initMatrix ( int n ) {
     Matrix result;
     for ( int i = 0; i< n; i++ ) {
@@ -61,13 +64,7 @@ std::vector<Matrix> pivotize ( Matrix matrix, Vector p ) {
                 pivoteMatrix[row][i] = tmp;
             }
         }
-//         std::cout << std::endl;
     }
-//     if ( pivoteMatrix.size() > 3 ) {
-//         Vector tmp = pivoteMatrix[2];
-//         pivoteMatrix[2] = pivoteMatrix[3];
-//         pivoteMatrix[3] = tmp;
-//     }
     std::vector<Matrix> result;
     Matrix vectorContainer;
     result.push_back ( pivoteMatrix );
@@ -76,22 +73,48 @@ std::vector<Matrix> pivotize ( Matrix matrix, Vector p ) {
     return result;
 }
 
-Matrix LU ( Matrix matrix ) {
+void pivotize ( int actualCol ) {
     int n = matrix.size();
-    Matrix result = matrix;
+    double maxValue = 0.0;
+    int row = actualCol;
+    for ( int i = actualCol; i < n; i++ ) {
+        if ( fabs ( matrix[i][actualCol] ) > maxValue ) {
+            maxValue = fabs ( matrix[i][actualCol] );
+            row = i;
+        }
+    }
+    if ( maxValue > 0.0 ) {
+        double tmp = P[actualCol];
+        P[actualCol] = P[row];
+        P[row] = tmp;
+        for ( int i = 0; i< n; i++ ) {
+            double tmp = matrix[actualCol][i];
+            matrix[actualCol][i] = matrix[row][i];
+            matrix[row][i] = tmp;
+        }
+    }
+}
+
+void LU() {
+    int n = matrix.size();
     for ( int k = 0; k < n; k++ ) {
+        std::cout << std::endl;
+//         print ( matrix );
+        pivotize ( k );
+//         print ( matrix );
+//         std::cout << std::endl;
         for ( int i = k + 1; i < n; i++ ) {
-//             std::cout << result[i][k] << " = " << result[i][k] << " / " << result[k][k] << "// ";
-            result[i][k] = result[i][k] / result[k][k];
-//             std::cout << result[i][k] << std::endl;
+//             std::cout << matrix[i][k] << " = " << matrix[i][k] << " / " << matrix[k][k] << "// ";
+            matrix[i][k] = matrix[i][k] / matrix[k][k];
+//             std::cout << matrix[i][k] << std::endl;
             for ( int j = k + 1; j < n; j++ ) {
-//                 std::cout << result[i][j] << " = " << result[i][j] << " - " << result[i][0] << " * " << result[0][j] << "// ";
-                result[i][j] = result[i][j] - result[i][0] * result[0][j];
-//                 std::cout << result[i][j] << std::endl;
+//                 std::cout << matrix[i][j] << " = " << matrix[i][j] << " - " << matrix[i][k] << " * " << matrix[k][j] << "// ";
+                matrix[i][j] = matrix[i][j] - matrix[i][k] * matrix[k][j];
+//                 std::cout << matrix[i][j] << std::endl;
             }
         }
     }
-    return result;
+    
 }
 
 Vector calculateBP ( Vector B, Vector P ) {
@@ -141,16 +164,13 @@ int main() {
     int n,m;
     std::cin >> n;
     while ( n != 0 ) {
-        Matrix matrix;
+        
         matrix = readMatrix ( n,n );
 
-        Vector P = initPVector ( n );
-        std::vector<Matrix> container = pivotize ( matrix, P );
-        Matrix A = container[0];
-        P = container[1][0];
-	std::cout << "A:" << std::endl;
-        print ( A );
-        if ( isSingular ( A ) ) {
+        P = initPVector ( n );
+	std::vector<Matrix> container = pivotize ( matrix, P );
+        Matrix checkSingularyA = container[0];
+        if ( isSingular ( checkSingularyA ) ) {
             std::cout << "szingularis" << std::endl;
             std::cin >> m;
             for ( int vectorCounter = 0; vectorCounter < m; vectorCounter++ ) {
@@ -159,21 +179,21 @@ int main() {
 
             }
         } else {
-            Matrix lu = LU ( A );
+            LU();
 	    std::cout << "LU:" << std::endl;
-            print ( lu );
-	    std::cout << "P:" << std::endl;
-	    print(P);
+	    print(matrix);
+// 	    std::cout << "P:" << std::endl;
+// 	    print(P);
 	    std::cout <<  std::endl;
             std::cin >> m;
             for ( int vectorCounter = 0; vectorCounter < m; vectorCounter++ ) {
                 Vector B;
                 B = readVector ( n );
                 Vector BP = calculateBP ( B, P );
-                Matrix UniqeL = makeUniqL ( lu );
+                Matrix UniqeL = makeUniqL ( matrix );
                 Vector Y = calculateY ( UniqeL, BP );
-                Vector X = calculateX ( lu, Y );
-                print ( X );
+                Vector X = calculateX ( matrix, Y );
+                //print ( X );
                 std::cout <<  std::endl;
             }
 
